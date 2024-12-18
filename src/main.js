@@ -160,3 +160,17 @@ async function getMoviesByCategory(id) {
     createMovies(movies, genericSection);
 }
 
+async function getMovieBySearch(query) {
+    const {data} = await api(`search/movie`, {
+        params: {
+            query, //como el parametro se llama igual se pone asi
+        }
+    });
+
+    //Esta linea ya no se usa con axios
+    //const data = await res.json();
+    const movies = data.results;
+    
+    createMovies(movies, genericSection);
+}
+
