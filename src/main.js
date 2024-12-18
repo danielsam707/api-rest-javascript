@@ -121,8 +121,9 @@ async function getCategoriesPreview() {
         const categoryTitle = document.createElement('h3');
         categoryTitle.classList.add('category-title');
         categoryTitle.setAttribute('id', 'id'+category.id);
+        //para cuando se clickea una categoria
         categoryTitle.addEventListener('click', ()=> {
-            location.hash = '#category=' + category.id;
+            location.hash = `#category=${category.id}-${category.name}`;
         });
         const categoryTitleText = document.createTextNode(category.name);
 
@@ -130,6 +131,39 @@ async function getCategoriesPreview() {
         categoryTitle.appendChild(categoryTitleText);
         categoryContainer.appendChild(categoryTitle);
         categoriesPreviewList.appendChild(categoryContainer);
+    })
+}
+
+async function getMoviesByCategory(id) {
+    const {data} = await api(`discover/movie`, {
+        params: {
+            with_genres: id,
+        }
+    });
+
+    //Esta linea ya no se usa con axios
+    //const data = await res.json();
+    const movies = data.results;
+    
+    genericSection.innerHTML = "";
+    //RECORRER LAS PELICULAS
+    movies.forEach((movie) => {
+
+        
+        //Creo un div contenedor
+        const movieContainer = document.createElement('div');
+        movieContainer.classList.add('movie-container');
+
+        //Creo el elemnto imagen
+        const movieImg = document.createElement('img');
+        movieImg.classList.add('movie-img');
+        movieImg.setAttribute('alt', movie.title);
+        movieImg.setAttribute('src',
+            'https://image.tmdb.org/t/p/w300'+movie.poster_path
+        );
+
+        movieContainer.appendChild(movieImg);
+        genericSection.appendChild(movieContainer);
     })
 }
 
