@@ -160,6 +160,7 @@ async function getMoviesByCategory(id) {
     createMovies(movies, genericSection);
 }
 
+//FUNCION OBTENER PELICULAS POR EL BUSCADOR
 async function getMovieBySearch(query) {
     const {data} = await api(`search/movie`, {
         params: {
@@ -174,3 +175,12 @@ async function getMovieBySearch(query) {
     createMovies(movies, genericSection);
 }
 
+async function getTrendingMovies() {
+    const {data} = await api(`trending/movie/day`);
+
+    //Esta linea ya no se usa con axios
+    //const data = await res.json();
+    const movies = data.results;
+    
+    createMovies(movies, genericSection);
+}

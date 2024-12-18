@@ -7,7 +7,8 @@ trendingBtn.addEventListener('click', ()=> {
 });
 
 arrowBtn.addEventListener('click', ()=> {
-  location.hash = '#home';
+  history.back();
+  //location.hash = '#home';
 });
 
 
@@ -54,6 +55,10 @@ function trendsPage(){
   categoriesPreviewSection.classList.add('inactive');
   genericSection.classList.remove('inactive');
   movieDetailSection.classList.add('inactive');
+
+  headerCategoryTitle.innerHTML = 'Tendencias'
+
+  getTrendingMovies();
 }
 
 function searchPage(){
