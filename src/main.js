@@ -62,6 +62,56 @@ async function getCategoriesPreview() {
 }
 */
 
+// UTILS
+
+function createMovies(movies, container){
+    container.innerHTML = '';
+
+    movies.forEach((movie) => {
+
+        
+        //Creo un div contenedor
+        const movieContainer = document.createElement('div');
+        movieContainer.classList.add('movie-container');
+
+        //Creo el elemnto imagen
+        const movieImg = document.createElement('img');
+        movieImg.classList.add('movie-img');
+        movieImg.setAttribute('alt', movie.title);
+        movieImg.setAttribute('src',
+            'https://image.tmdb.org/t/p/w300'+movie.poster_path
+        );
+
+        movieContainer.appendChild(movieImg);
+        container.appendChild(movieContainer);
+    })
+}
+
+function createCategories(categories, container){
+    container.innerHTML = "";
+
+    //RECORRER LAS PELICULAS
+    categories.forEach((category) => {
+        //Creo un div contenedor
+        const categoryContainer = document.createElement('div');
+        categoryContainer.classList.add('category-container');
+
+        //Creo el elemnto title
+        const categoryTitle = document.createElement('h3');
+        categoryTitle.classList.add('category-title');
+        categoryTitle.setAttribute('id', 'id'+category.id);
+        //para cuando se clickea una categoria
+        categoryTitle.addEventListener('click', ()=> {
+            location.hash = `#category=${category.id}-${category.name}`;
+        });
+        const categoryTitleText = document.createTextNode(category.name);
+
+        //Agregar los elementos al HTML
+        categoryTitle.appendChild(categoryTitleText);
+        categoryContainer.appendChild(categoryTitle);
+        container.appendChild(categoryContainer);
+    })
+}
 
 //CREANDO EL OBJETO AXIOS PARA HACER LAS PETICIONES
 const api = axios.create({
@@ -82,26 +132,7 @@ async function getTrendingMoviesPreview() {
     //const data = await res.json();
     const movies = data.results;
     
-    trendingMoviesPreviewList.innerHTML = "";
-    //RECORRER LAS PELICULAS
-    movies.forEach((movie) => {
-
-        
-        //Creo un div contenedor
-        const movieContainer = document.createElement('div');
-        movieContainer.classList.add('movie-container');
-
-        //Creo el elemnto imagen
-        const movieImg = document.createElement('img');
-        movieImg.classList.add('movie-img');
-        movieImg.setAttribute('alt', movie.title);
-        movieImg.setAttribute('src',
-            'https://image.tmdb.org/t/p/w300'+movie.poster_path
-        );
-
-        movieContainer.appendChild(movieImg);
-        trendingMoviesPreviewList.appendChild(movieContainer);
-    })
+    createMovies(movies, trendingMoviesPreviewList);
 }
 
 //FUNCION: OBTENER CATEGORIAS
@@ -111,29 +142,10 @@ async function getCategoriesPreview() {
 
     categoriesPreviewList.innerHTML = "";
     
-    //RECORRER LAS PELICULAS
-    categories.forEach((category) => {
-        //Creo un div contenedor
-        const categoryContainer = document.createElement('div');
-        categoryContainer.classList.add('category-container');
-
-        //Creo el elemnto title
-        const categoryTitle = document.createElement('h3');
-        categoryTitle.classList.add('category-title');
-        categoryTitle.setAttribute('id', 'id'+category.id);
-        //para cuando se clickea una categoria
-        categoryTitle.addEventListener('click', ()=> {
-            location.hash = `#category=${category.id}-${category.name}`;
-        });
-        const categoryTitleText = document.createTextNode(category.name);
-
-        //Agregar los elementos al HTML
-        categoryTitle.appendChild(categoryTitleText);
-        categoryContainer.appendChild(categoryTitle);
-        categoriesPreviewList.appendChild(categoryContainer);
-    })
+    createCategories(categories, categoriesPreviewList);
 }
 
+//FUNCION: OBTENER PELICULAS POR CATEGORIA
 async function getMoviesByCategory(id) {
     const {data} = await api(`discover/movie`, {
         params: {
@@ -145,25 +157,6 @@ async function getMoviesByCategory(id) {
     //const data = await res.json();
     const movies = data.results;
     
-    genericSection.innerHTML = "";
-    //RECORRER LAS PELICULAS
-    movies.forEach((movie) => {
-
-        
-        //Creo un div contenedor
-        const movieContainer = document.createElement('div');
-        movieContainer.classList.add('movie-container');
-
-        //Creo el elemnto imagen
-        const movieImg = document.createElement('img');
-        movieImg.classList.add('movie-img');
-        movieImg.setAttribute('alt', movie.title);
-        movieImg.setAttribute('src',
-            'https://image.tmdb.org/t/p/w300'+movie.poster_path
-        );
-
-        movieContainer.appendChild(movieImg);
-        genericSection.appendChild(movieContainer);
-    })
+    createMovies(movies, genericSection);
 }
 

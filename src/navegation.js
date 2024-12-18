@@ -32,6 +32,10 @@ function navegator()
   } else {
     homePage();
   }
+
+  //Esto hace que el scroll quede en la posicion de arriba
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
 }
 
 function trendsPage(){
