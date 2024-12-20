@@ -64,6 +64,7 @@ async function getCategoriesPreview() {
 
 // UTILS
 
+//FUCION: PRINCIPAL PARA LISTAR PELICULAS
 function createMovies(movies, container){
     container.innerHTML = '';
 
@@ -73,6 +74,9 @@ function createMovies(movies, container){
         //Creo un div contenedor
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
+        movieContainer.addEventListener('click', () => {
+            location.hash = '#movie='+movie.id;
+        });
 
         //Creo el elemnto imagen
         const movieImg = document.createElement('img');
@@ -87,6 +91,7 @@ function createMovies(movies, container){
     })
 }
 
+//FUCION: PRINCIPAL PARA LISTAR PELICULAS
 function createCategories(categories, container){
     container.innerHTML = "";
 
@@ -152,25 +157,49 @@ async function getMoviesByCategory(id) {
             with_genres: id,
         }
     });
-
-    //Esta linea ya no se usa con axios
-    //const data = await res.json();
     const movies = data.results;
     
     createMovies(movies, genericSection);
 }
 
+//FUNCION: OBTENER PELICULAS POR EL BUSCADOR
 async function getMovieBySearch(query) {
     const {data} = await api(`search/movie`, {
         params: {
             query, //como el parametro se llama igual se pone asi
         }
     });
-
-    //Esta linea ya no se usa con axios
-    //const data = await res.json();
     const movies = data.results;
     
     createMovies(movies, genericSection);
 }
 
+async function getTrendingMovies() {
+    const {data} = await api(`trending/movie/day`);
+    const movies = data.results;
+    
+    createMovies(movies, genericSection);
+}
+
+//FUCION: OBTENER DETALLES DE LAS PELICULAS
+async function getMovieById(id) {
+    const {data: movie} = await api(`movie/`+id);
+
+    //guardo la imagen de la pelicula en una variable (se modifico el tamño a 500)
+    const movieImgUrl = 'https://image.tmdb.org/t/p/w500'+movie.poster_path
+    headerSection.style.background = `
+    linear-gradient(
+    180deg, 
+    rgba(0, 0, 0, 0.35) 19.27%,
+    rgba(0, 0, 0, 0) 29.17%),
+    url(${movieImgUrl})`;
+
+
+    //se modifica la informacion de la vista de detalle
+    movieDetailTitle.textContent = movie.title;
+    movieDetailDescription.textContent = movie.overview;
+    movieDetailScore.textContent = movie.vote_average;
+
+    //se llama el metodo para que carguen las categorias correspondientes
+    createCategories(movie.genres, movieDetailCategoriesList);
+}
