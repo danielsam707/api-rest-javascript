@@ -202,4 +202,14 @@ async function getMovieById(id) {
 
     //se llama el metodo para que carguen las categorias correspondientes
     createCategories(movie.genres, movieDetailCategoriesList);
+
+    getRelatedMovieId(id);
+}
+
+async function getRelatedMovieId(id) {
+    const {data} = await api(`movie/${id}/recommendations`);
+
+    const relatedMovies = data.results;
+
+    createMovies(relatedMovies, relatedMoviesContainer);
 }
